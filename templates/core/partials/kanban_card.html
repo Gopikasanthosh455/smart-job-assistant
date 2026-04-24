@@ -1,0 +1,24 @@
+<div class="kanban-card">
+  <p class="kanban-job-title">{{ app.job_title }}</p>
+  <p class="kanban-company">{{ app.company_name }}</p>
+  <p class="kanban-date">Applied: {{ app.applied_date }}</p>
+  {% if app.job_url %}
+    <a href="{{ app.job_url }}" target="_blank" class="kanban-link">View Job ↗</a>
+  {% endif %}
+  <div class="kanban-actions">
+    <form method="POST" action="{% url 'update_status' app.pk %}" style="display:inline;">
+      {% csrf_token %}
+      <select name="status" onchange="this.form.submit()" class="status-select">
+        <option value="applied" {% if app.status == 'applied' %}selected{% endif %}>Applied</option>
+        <option value="interview" {% if app.status == 'interview' %}selected{% endif %}>Interview</option>
+        <option value="offer" {% if app.status == 'offer' %}selected{% endif %}>Offer</option>
+        <option value="rejected" {% if app.status == 'rejected' %}selected{% endif %}>Rejected</option>
+      </select>
+    </form>
+    <form method="POST" action="{% url 'delete_application' app.pk %}" style="display:inline;"
+          onsubmit="return confirm('Delete this application?')">
+      {% csrf_token %}
+      <button type="submit" class="btn-delete">✕</button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Cover Letter - JobAssist AI{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <h1>✉️ Cover Letter Generator</h1>
+    <p>Fill in the job details and get a tailored cover letter in seconds using Gemini AI.</p>
+  </div>
+
+  {% if not resume %}
+  <div class="alert alert-info">⚠️ Please <a href="{% url 'resume' %}">upload your resume</a> first before using this feature.</div>
+  {% endif %}
+
+  <div class="section-card">
+    <form method="POST">
+      {% csrf_token %}
+      <div class="two-col-grid">
+        <div class="form-group">
+          <label>Company Name</label>
+          {{ form.company_name }}
+        </div>
+        <div class="form-group">
+          <label>Job Title</label>
+          {{ form.job_title }}
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Job Description</label>
+        {{ form.job_description }}
+      </div>
+      <button type="submit" class="btn btn-primary" {% if not resume %}disabled{% endif %}>
+        Generate Cover Letter
+      </button>
+    </form>
+  </div>
+
+  {% if letter %}
+  <div class="section-card" style="margin-top:1.5rem;">
+    <div class="section-header-row">
+      <h2 class="section-title">Your Cover Letter</h2>
+      <button onclick="copyLetter()" class="btn btn-secondary" id="copy-btn">📋 Copy</button>
+    </div>
+    <div class="letter-box" id="letter-content">{{ letter }}</div>
+    <p class="hint-text">💡 Read through and personalise any details before sending.</p>
+  </div>
+
+  <script>
+    function copyLetter() {
+      const text = document.getElementById('letter-content').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.innerText = '✅ Copied!';
+        setTimeout(() => btn.innerText = '📋 Copy', 2000);
+      });
+    }
+  </script>
+  {% endif %}
+</div>
+{% endblock %}

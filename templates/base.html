@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}JobAssist AI{% endblock %}</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+{% if user.is_authenticated %}
+<nav class="navbar">
+  <a href="{% url 'dashboard' %}" class="navbar-brand">🤖 JobAssist AI</a>
+  <div class="navbar-links">
+    <a href="{% url 'dashboard' %}" {% if request.resolver_match.url_name == 'dashboard' %}class="active"{% endif %}>🏠 Dashboard</a>
+    <a href="{% url 'resume' %}" {% if request.resolver_match.url_name == 'resume' %}class="active"{% endif %}>📄 Resume</a>
+    <a href="{% url 'skill_match' %}" {% if request.resolver_match.url_name == 'skill_match' %}class="active"{% endif %}>🎯 Skill Match</a>
+    <a href="{% url 'cover_letter' %}" {% if request.resolver_match.url_name == 'cover_letter' %}class="active"{% endif %}>✉️ Cover Letter</a>
+    <a href="{% url 'interview_prep' %}" {% if request.resolver_match.url_name == 'interview_prep' %}class="active"{% endif %}>🧠 Interview Prep</a>
+    <a href="{% url 'kanban' %}" {% if request.resolver_match.url_name == 'kanban' %}class="active"{% endif %}>📋 Tracker</a>
+  </div>
+  <div class="navbar-user">
+    <span>Hi, {{ user.username }}</span>
+    <a href="{% url 'logout' %}" class="btn-logout">Logout</a>
+  </div>
+</nav>
+{% endif %}
+
+<main class="main-content">
+  {% if messages %}
+    <div class="messages-container">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

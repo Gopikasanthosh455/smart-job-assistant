@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Login - JobAssist AI{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon">🤖</div>
+      <h1>Welcome Back</h1>
+      <p>Sign in to your account</p>
+    </div>
+
+    <form method="POST">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          <label>{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <span class="field-error">{{ field.errors|join:", " }}</span>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+    </form>
+
+    <p class="auth-footer">
+      No account? <a href="{% url 'register' %}">Create one free</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}Skill Match - JobAssist AI{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <h1>🎯 Skill Match Analyser</h1>
+    <p>Paste a job description and see how well your resume matches it.</p>
+  </div>
+
+  {% if not resume %}
+  <div class="alert alert-info">⚠️ Please <a href="{% url 'resume' %}">upload your resume</a> first before using this feature.</div>
+  {% endif %}
+
+  <div class="section-card">
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Job Description</label>
+        {{ form.job_description }}
+      </div>
+      <button type="submit" class="btn btn-primary" {% if not resume %}disabled{% endif %}>
+        Analyse Match
+      </button>
+    </form>
+  </div>
+
+  {% if result %}
+  <div style="margin-top:1.5rem;">
+
+    <!-- Match Score -->
+    <div class="section-card text-center">
+      <p class="text-muted" style="margin-bottom:0.5rem;">Overall Match Score</p>
+      <div class="match-score" style="color:
+        {% if result.match_percentage >= 70 %}#00c9a7
+        {% elif result.match_percentage >= 45 %}#f7971e
+        {% else %}#ef5350{% endif %};">
+        {{ result.match_percentage }}%
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" style="width:{{ result.match_percentage }}%;
+          background:{% if result.match_percentage >= 70 %}#00c9a7{% elif result.match_percentage >= 45 %}#f7971e{% else %}#ef5350{% endif %};">
+        </div>
+      </div>
+      <p class="text-muted">
+        {% if result.match_percentage >= 70 %}✅ Strong match — apply with confidence!
+        {% elif result.match_percentage >= 45 %}⚠️ Decent match — a few gaps to address
+        {% else %}❌ Weak match — build missing skills first{% endif %}
+      </p>
+    </div>
+
+    <!-- Skills Grid -->
+    <div class="two-col-grid" style="margin-top:1rem;">
+      <div class="section-card">
+        <h3 class="section-title" style="color:#00c9a7;">✅ Skills You Have ({{ result.matched_skills|length }})</h3>
+        <div class="tags-wrap">
+          {% for skill in result.matched_skills %}
+            <span class="tag tag-green">{{ skill }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="section-card">
+        <h3 class="section-title" style="color:#ef5350;">❌ Missing Skills ({{ result.missing_skills|length }})</h3>
+        <div class="tags-wrap">
+          {% for skill in result.missing_skills %}
+            <span class="tag tag-red">{{ skill }}</span>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Strengths & Suggestions -->
+    <div class="two-col-grid" style="margin-top:1rem;">
+      <div class="section-card">
+        <h3 class="section-title">💪 Your Strengths</h3>
+        <ul class="ai-list">
+          {% for s in result.strengths %}<li>{{ s }}</li>{% endfor %}
+        </ul>
+      </div>
+      <div class="section-card">
+        <h3 class="section-title">💡 AI Suggestions</h3>
+        <ul class="ai-list">
+          {% for s in result.suggestions %}<li>{{ s }}</li>{% endfor %}
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

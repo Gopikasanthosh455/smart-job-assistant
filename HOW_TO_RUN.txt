@@ -1,0 +1,115 @@
+=====================================================
+  SMART JOB ASSISTANT — HOW TO RUN (WINDOWS)
+=====================================================
+
+WHAT YOU NEED TO INSTALL FIRST:
+  1. Python 3.11  → https://python.org/downloads
+     (During install: CHECK the box "Add Python to PATH")
+
+  2. Git  → https://git-scm.com/download/win
+     (Click Next all the way — default settings are fine)
+
+That's it. No Node.js. No React. Pure Python + Django.
+
+-----------------------------------------------------
+STEP 1 — GET YOUR FREE GEMINI API KEY  (5 minutes)
+-----------------------------------------------------
+1. Go to:  https://aistudio.google.com
+2. Sign in with your Google account
+3. Click "Get API Key" → "Create API key in new project"
+4. Copy the key (it looks like: AIzaSy...)
+   Keep this key safe — you will need it in Step 3
+
+-----------------------------------------------------
+STEP 2 — SET UP THE PROJECT
+-----------------------------------------------------
+Open Command Prompt (press Windows key, type "cmd", press Enter)
+
+Run these commands one by one:
+
+  cd Desktop\smart-job-assistant
+
+  python -m venv venv
+
+  venv\Scripts\activate
+
+  (You should now see "(venv)" at the start of the line)
+
+  pip install -r requirements.txt
+
+  (This installs Django, Gemini AI library, PDF reader — wait for it to finish)
+
+-----------------------------------------------------
+STEP 3 — ADD YOUR GEMINI API KEY
+-----------------------------------------------------
+In the project folder, find the file:  .env.example
+Copy it and rename the copy to:  .env
+
+Open .env with Notepad.
+Change this line:
+  GEMINI_API_KEY=YOUR_GEMINI_API_KEY_HERE
+To:
+  GEMINI_API_KEY=paste_your_actual_key_here
+
+Save and close Notepad.
+
+Then in Command Prompt run:
+  set GEMINI_API_KEY=paste_your_actual_key_here
+
+(Replace with your real key — this sets it for the current session)
+
+-----------------------------------------------------
+STEP 4 — SET UP THE DATABASE AND RUN
+-----------------------------------------------------
+In the same Command Prompt (with venv active):
+
+  python manage.py migrate
+
+  python manage.py createsuperuser
+  (Optional — only if you want to access /admin panel)
+
+  python manage.py runserver
+
+-----------------------------------------------------
+STEP 5 — OPEN THE APP
+-----------------------------------------------------
+Open your browser and go to:
+
+  http://127.0.0.1:8000
+
+You will see the app! Register a new account and start using it.
+
+-----------------------------------------------------
+STEP 6 — PUSH TO GITHUB (for your resume)
+-----------------------------------------------------
+First create a new repo on github.com named: smart-job-assistant
+
+Then in Command Prompt (in the project folder):
+
+  git init
+  git add .
+  git commit -m "Smart Job Application Assistant - Django + Gemini AI"
+  git branch -M main
+  git remote add origin https://github.com/Gopikasanthosh455/smart-job-assistant.git
+  git push -u origin main
+
+-----------------------------------------------------
+IF SOMETHING GOES WRONG
+-----------------------------------------------------
+Error: 'python' not recognized
+  → Reinstall Python and CHECK "Add Python to PATH"
+
+Error: pip install fails
+  → Make sure you see "(venv)" in terminal before running pip
+
+Error: Gemini API error / No module named google
+  → Run: pip install google-generativeai
+
+Error: No module named fitz
+  → Run: pip install PyMuPDF
+
+Error: GEMINI_API_KEY not set
+  → Run: set GEMINI_API_KEY=your_actual_key_here
+  → Then run: python manage.py runserver again
+
+=====================================================

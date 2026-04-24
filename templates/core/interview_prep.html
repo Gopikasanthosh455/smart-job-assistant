@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}Interview Prep - JobAssist AI{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <h1>🧠 Interview Prep</h1>
+    <p>Get AI-generated interview questions tailored to any role. Click each question to see answer tips.</p>
+  </div>
+
+  <div class="section-card">
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Job Title</label>
+        {{ form.job_title }}
+      </div>
+      <div class="form-group">
+        <label>Job Description</label>
+        {{ form.job_description }}
+      </div>
+      <button type="submit" class="btn btn-primary">Generate Questions</button>
+    </form>
+  </div>
+
+  {% if questions %}
+
+  {% if questions.technical %}
+  <div class="section-card" style="margin-top:1.5rem;">
+    <h2 class="section-title" style="color:#6c63ff;">💻 Technical Questions</h2>
+    {% for q in questions.technical %}
+    <div class="question-item">
+      <p class="question-text">{{ forloop.counter }}. {{ q.question }}</p>
+      <button class="tip-toggle" onclick="toggleTip(this)">▼ Show answer tip</button>
+      <div class="tip-box" style="display:none;">💡 {{ q.tip }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if questions.behavioural %}
+  <div class="section-card" style="margin-top:1rem;">
+    <h2 class="section-title" style="color:#f7971e;">🤝 Behavioural Questions</h2>
+    {% for q in questions.behavioural %}
+    <div class="question-item">
+      <p class="question-text">{{ forloop.counter }}. {{ q.question }}</p>
+      <button class="tip-toggle" onclick="toggleTip(this)">▼ Show answer tip</button>
+      <div class="tip-box" style="display:none;">💡 {{ q.tip }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if questions.project %}
+  <div class="section-card" style="margin-top:1rem;">
+    <h2 class="section-title" style="color:#00c9a7;">🏗️ Project Questions</h2>
+    {% for q in questions.project %}
+    <div class="question-item">
+      <p class="question-text">{{ forloop.counter }}. {{ q.question }}</p>
+      <button class="tip-toggle" onclick="toggleTip(this)">▼ Show answer tip</button>
+      <div class="tip-box" style="display:none;">💡 {{ q.tip }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="section-card" style="margin-top:1rem;background:#fff8e1;border:1px solid #ffe082;">
+    <p style="color:#795548;font-size:0.875rem;line-height:1.7;">
+      <strong>💡 How to use this:</strong> Go through each question out loud.
+      Don't memorise — understand the concept. For technical questions, give real examples from your projects.
+    </p>
+  </div>
+
+  <script>
+    function toggleTip(btn) {
+      const tip = btn.nextElementSibling;
+      if (tip.style.display === 'none') {
+        tip.style.display = 'block';
+        btn.innerText = '▲ Hide tip';
+      } else {
+        tip.style.display = 'none';
+        btn.innerText = '▼ Show answer tip';
+      }
+    }
+  </script>
+  {% endif %}
+</div>
+{% endblock %}

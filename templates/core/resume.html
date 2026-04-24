@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}My Resume - JobAssist AI{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <h1>📄 My Resume</h1>
+    <p>Upload your PDF resume. The AI will read it and use it for all features.</p>
+  </div>
+
+  <div class="section-card">
+    <h2 class="section-title">Upload New Resume</h2>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Select PDF file</label>
+        {{ form.file }}
+        {% if form.file.errors %}
+          <span class="field-error">{{ form.file.errors|join:", " }}</span>
+        {% endif %}
+      </div>
+      <button type="submit" class="btn btn-primary">Upload Resume</button>
+    </form>
+  </div>
+
+  {% if resume %}
+  <div class="section-card" style="margin-top:1.5rem;">
+    <div class="section-header-row">
+      <h2 class="section-title">Current Resume</h2>
+      <span class="text-muted">Uploaded: {{ resume.uploaded_at|date:"d M Y" }}</span>
+    </div>
+    <div class="text-preview">
+      {{ resume.extracted_text|truncatechars:1000 }}
+    </div>
+    <p class="hint-text">✅ This extracted text is what the AI uses to generate your cover letters and skill match results.</p>
+  </div>
+  {% else %}
+  <div class="empty-state" style="margin-top:1.5rem;">
+    <div class="empty-icon">📂</div>
+    <p>No resume uploaded yet. Upload your PDF above to get started.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

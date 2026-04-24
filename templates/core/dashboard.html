@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - JobAssist AI{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-header">
+    <h1>Welcome back, {{ user.username }} 👋</h1>
+    <p>Your AI-powered job application assistant</p>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num">{{ total_apps }}</div>
+      <div class="stat-label">Total Applications</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#f7971e;">{{ interview_count }}</div>
+      <div class="stat-label">Interviews</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#00c9a7;">{{ offer_count }}</div>
+      <div class="stat-label">Offers</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:{% if resume %}#00c9a7{% else %}#ef5350{% endif %};">
+        {% if resume %}✓{% else %}✗{% endif %}
+      </div>
+      <div class="stat-label">Resume Uploaded</div>
+    </div>
+  </div>
+
+  {% if not resume %}
+  <div class="alert alert-info" style="margin-bottom:1.5rem;">
+    ⚠️ You haven't uploaded your resume yet.
+    <a href="{% url 'resume' %}" style="color:#1565c0;font-weight:600;">Upload now →</a>
+  </div>
+  {% endif %}
+
+  <!-- Feature Cards -->
+  <div class="features-grid">
+    <a href="{% url 'resume' %}" class="feature-card">
+      <div class="feature-icon">📄</div>
+      <h3>Upload Resume</h3>
+      <p>Upload your PDF resume. AI reads and extracts your skills automatically.</p>
+    </a>
+    <a href="{% url 'skill_match' %}" class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3>Skill Match</h3>
+      <p>Paste a job description. See your match % and missing skills instantly.</p>
+    </a>
+    <a href="{% url 'cover_letter' %}" class="feature-card">
+      <div class="feature-icon">✉️</div>
+      <h3>Cover Letter AI</h3>
+      <p>Get a tailored cover letter generated in seconds using Gemini AI.</p>
+    </a>
+    <a href="{% url 'interview_prep' %}" class="feature-card">
+      <div class="feature-icon">🧠</div>
+      <h3>Interview Prep</h3>
+      <p>AI generates technical and behavioural interview questions for any role.</p>
+    </a>
+    <a href="{% url 'kanban' %}" class="feature-card">
+      <div class="feature-icon">📋</div>
+      <h3>Job Tracker</h3>
+      <p>Track all your applications in a Kanban board — Applied, Interview, Offer.</p>
+    </a>
+  </div>
+
+  <!-- Recent Applications -->
+  {% if recent_apps %}
+  <div class="section-card" style="margin-top:2rem;">
+    <h2 class="section-title">Recent Applications</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Role</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for app in recent_apps %}
+        <tr>
+          <td>{{ app.company_name }}</td>
+          <td>{{ app.job_title }}</td>
+          <td>{{ app.applied_date }}</td>
+          <td><span class="status-badge status-{{ app.status }}">{{ app.get_status_display }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a href="{% url 'kanban' %}" class="btn btn-secondary" style="margin-top:1rem;">View All →</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
